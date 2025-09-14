@@ -19,3 +19,14 @@ out/
 aws_credentials*
 *.pem
 *.key
+
+# ---- HITL local (成果物/秘密情報はコミットしない) ----
+out_edits/          # ローカルAPIの保存先(既定)。out/を使うなら不要
+certs/              # 自己署名証明書ディレクトリ
+*.crt               # 証明書(公開でも無駄コミット防止)
+*.csr               # CSR
+# *.key は既に入っているのでOK
+
+# もしweb/を使わない（Pages側にhitl.htmlのみ）の場合は以下で丸ごと無視
+# web/
+
