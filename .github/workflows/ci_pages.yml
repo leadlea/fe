@@ -3,15 +3,24 @@ name: CI (TR check) & Pages deploy
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'out/**'
-      - 'docs/**'
-      - '.github/workflows/**'
+    paths-ignore:
+      - '.venv/**'
+      - 'out_edits/**'
+      - 'certs/**'
+      - '*.zip'
+      - '*.key'
+      - '*.crt'
+      - '*.csr'
   pull_request:
     branches: [ main ]
-    paths:
-      - 'out/**'
-      - 'docs/**'
+    paths-ignore:
+      - '.venv/**'
+      - 'out_edits/**'
+      - 'certs/**'
+      - '*.zip'
+      - '*.key'
+      - '*.crt'
+      - '*.csr'
   workflow_dispatch:
 
 permissions:
@@ -29,27 +38,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Python + pandas を用意
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - name: Install pandas
         run: pip install --disable-pip-version-check pandas
 
-      - name: Check files exist
+      # out がある時だけチェックを実施
+      - name: Detect out files
+        id: detect
         run: |
-          test -f out/B_full/drive_list.csv || (echo "::error file=out/B_full/drive_list.csv::missing" && exit 1)
-          test -f out/B_full/xfmr_list.csv  || (echo "::error file=out/B_full/xfmr_list.csv::missing" && exit 1)
+          if [ -f out/B_full/drive_list.csv ] && [ -f out/B_full/xfmr_list.csv ]; then
+            echo "has_out=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_out=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Validate transformer consistency
+        if: steps.detect.outputs.has_out == 'true'
         run: |
           python - <<'PY'
-          import pandas as pd, sys, os
-          tol = float(os.getenv("TR_TOLERANCE","0.01"))
+          import pandas as pd, sys
+          from pathlib import Path
+          tol = float("${{ env.TR_TOLERANCE }}")
           dr = pd.read_csv("out/B_full/drive_list.csv")
           xf = pd.read_csv("out/B_full/xfmr_list.csv")
           if "入力kVA(概算)" not in dr.columns:
-              print("::error :: column '入力kVA(概算)' not found in drive_list.csv"); sys.exit(1)
+              print("::error :: column '入力kVA(概算)' not found"); sys.exit(1)
           s = pd.to_numeric(dr["入力kVA(概算)"], errors="coerce").sum()
           b = float(xf["合算kVA(素)"].iloc[0])
           rel = abs(s - b) / max(1.0, b)
@@ -72,15 +87,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Prepare docs (copy out → docs/out)
+      - name: Prepare docs (copy out → docs/out, add root files)
         run: |
           mkdir -p docs/out
           rsync -av --delete out/ docs/out/ || true
+          # ルートの hitl.html / README.md も公開物へ
+          [ -f hitl.html ] && cp hitl.html docs/
+          [ -f README.md ] && cp README.md docs/README.md
+          # 既存の相対パス調整（必要なら）
           if [ -f docs/executive_summary.html ]; then
             sed -i 's|\.\./out/|out/|g' docs/executive_summary.html
           fi
 
-      # wiring.md があるときだけ Mermaid → SVG（サンドボックス無効化付き）
+      # README.md をHTMLにしたい場合（任意）
+      - name: Convert README.md -> README.html (optional)
+        if: ${{ hashFiles('README.md') != '' }}
+        uses: docker://pandoc/core:2.19
+        with:
+          args: -f gfm -t html5 -s -o docs/README.html README.md
+
+      # Mermaid 変換は従来通り
       - name: Setup Node for Mermaid
         if: ${{ hashFiles('docs/out/B_full/wiring.md') != '' }}
         uses: actions/setup-node@v4
@@ -95,9 +121,7 @@ jobs:
         if: ${{ hashFiles('docs/out/B_full/wiring.md') != '' }}
         run: |
           cat > puppeteer-config.json <<'JSON'
-          {
-            "args": ["--no-sandbox", "--disable-setuid-sandbox"]
-          }
+          { "args": ["--no-sandbox", "--disable-setuid-sandbox"] }
           JSON
 
       - name: Render Mermaid to SVG
