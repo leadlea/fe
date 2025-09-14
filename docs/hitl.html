@@ -181,3 +181,7 @@ async function loadMermaid(){
   mermaid.run({ nodes: [el] });
 }
 </script>
+<style id="csv-scroll-fix">
+  #csvWrap { overflow:auto; max-width:100%; }
+  #csvWrap table { display:block; overflow-x:auto; white-space:nowrap; width:max-content; min-width:100%; }
+</style>
