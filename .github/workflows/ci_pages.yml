@@ -20,19 +20,29 @@ permissions:
   id-token: write
 
 env:
-  TR_TOLERANCE: "0.01"  # 1%
+  TR_TOLERANCE: "0.01"  # 許容相対誤差 1%
 
 jobs:
   tr-consistency:
+    name: TR consistency (∑kVA vs base kVA)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      # Python と pandas を用意
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pandas
+        run: pip install --disable-pip-version-check pandas
+
+      # 必須ファイルの存在確認
       - name: Check files exist
         run: |
           test -f out/B_full/drive_list.csv || (echo "::error file=out/B_full/drive_list.csv::missing" && exit 1)
           test -f out/B_full/xfmr_list.csv  || (echo "::error file=out/B_full/xfmr_list.csv::missing" && exit 1)
 
+      # TR整合チェック（pandas使用）
       - name: Validate transformer consistency
         run: |
           python - <<'PY'
@@ -51,6 +61,7 @@ jobs:
           PY
 
   build-and-deploy:
+    name: Build & Deploy Pages
     needs: tr-consistency
     runs-on: ubuntu-latest
     environment:
@@ -63,15 +74,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # out -> docs/out へコピー（ダッシュボード用に相対パスも補正）
       - name: Prepare docs (copy out → docs/out)
         run: |
           mkdir -p docs/out
           rsync -av --delete out/ docs/out/ || true
           if [ -f docs/executive_summary.html ]; then
-            sed -i.bak 's|\.\./out/|out/|g' docs/executive_summary.html
+            sed -i 's|\.\./out/|out/|g' docs/executive_summary.html
           fi
 
-      # MermaidのSVG化は wiring.md がある場合だけ実行
+      # wiring.md がある場合のみ Mermaid を SVG に変換
       - name: Setup Node for Mermaid
         if: ${{ hashFiles('docs/out/B_full/wiring.md') != '' }}
         uses: actions/setup-node@v4
