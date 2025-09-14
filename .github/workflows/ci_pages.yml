@@ -27,10 +27,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Check files exist
         run: |
           test -f out/B_full/drive_list.csv || (echo "::error file=out/B_full/drive_list.csv::missing" && exit 1)
           test -f out/B_full/xfmr_list.csv  || (echo "::error file=out/B_full/xfmr_list.csv::missing" && exit 1)
+
       - name: Validate transformer consistency
         run: |
           python - <<'PY'
@@ -60,29 +62,35 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+
       - name: Prepare docs (copy out → docs/out)
         run: |
           mkdir -p docs/out
           rsync -av --delete out/ docs/out/ || true
-          # exec_summary 内の相対パス '../out/' → 'out/' に自動変換
           if [ -f docs/executive_summary.html ]; then
             sed -i.bak 's|\.\./out/|out/|g' docs/executive_summary.html
           fi
-      - name: (Optional) Render Mermaid wiring.svg
-        if: exists('docs/out/B_full/wiring.md')
+
+      # MermaidのSVG化は wiring.md がある場合だけ実行
+      - name: Setup Node for Mermaid
+        if: ${{ hashFiles('docs/out/B_full/wiring.md') != '' }}
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Run mmdc
-        if: exists('docs/out/B_full/wiring.md')
+
+      - name: Render Mermaid to SVG
+        if: ${{ hashFiles('docs/out/B_full/wiring.md') != '' }}
         run: |
           npm i -g @mermaid-js/mermaid-cli
           sed -n '/```mermaid/,/```/p' docs/out/B_full/wiring.md | sed '1d;$d' > docs/out/B_full/wiring.mmd
           mmdc -i docs/out/B_full/wiring.mmd -o docs/out/B_full/wiring.svg
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./docs
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
