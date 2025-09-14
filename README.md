@@ -124,3 +124,4 @@ python src/sku_map_llm.py   --drives out/B_full/drive_list.csv --catalog data/ca
 
 ## ライセンス
 社内限定（PRIVATE）の場合はライセンス表記なし。外部公開時は MIT 等を検討。
+作成者：ビジョンコンサルティング　福原玄
