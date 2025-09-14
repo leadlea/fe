@@ -1,7 +1,7 @@
-# 富士電機 HITL Orchestrator MVP（Pages + Local API）
+# HITL Orchestrator MVP（Pages + Local API）
 
 **デモUI（GitHub Pages）**: https://leadlea.github.io/fe/hitl.html  
-**目的**: 既存のスクリプト群を「変更せず」に、**PDF → ETL → CSV編集（HITL）→ 再実行 → 図面（Mermaid/SVG）**まで一気通貫で回す最小実装。  
+**目的**: **PDF → ETL → CSV編集（HITL）→ 再実行 → 図面（Mermaid/SVG）**まで一気通貫で回す最小実装。  
 **LLM**: Amazon Bedrock / **Claude 3.5 Sonnet**（02〜04ステップ）。
 
 ---
@@ -149,4 +149,4 @@ git push
 
 ---
 
-© 富士電機 PoC / MVP（HITL Orchestrator）。
+© ビジョンコンサルティング 福原玄 PoC / MVP（HITL Orchestrator）。
