@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+*.egg-info/
+
+# Data / outputs
+out/
+!out/.gitkeep
+*.zip
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Credentials
+aws_credentials*
+*.pem
+*.key

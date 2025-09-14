@@ -1,0 +1,67 @@
+﻿row,用途,推奨INV(kW),電圧(V),vendor,model,why
+1,"品 ACCESSORY 以記属付 20SH.SH, SH, SH.SH.SH.SH, SH.SH.SH.SH.SH.",11.0,400.0,Fuji Electric,FRENIC-Std 11kW 400V,要求仕様と完全に一致(kW、電圧、周波数)。汎用性があり、IP20で一般的な保護等級を満たす。
+1,"品 ACCESSORY 以記属付 20SH.SH, SH, SH.SH.SH.SH, SH.SH.SH.SH.SH.",11.0,400.0,Fuji Electric,FRENIC-Std 15kW 400V,要求kWを上回り、余裕がある。他の仕様(電圧、周波数)は一致。汎用性があり、IP20で一般的な保護等級を満たす。
+1,"品 ACCESSORY 以記属付 20SH.SH, SH, SH.SH.SH.SH, SH.SH.SH.SH.SH.",11.0,400.0,Fuji Electric,FRENIC-Std 18.5kW 400V,要求kWを大きく上回り、将来の拡張性がある。他の仕様(電圧、周波数)は一致。汎用性があり、IP20で一般的な保護等級を満たす。
+2,転回向方 ROTATION スラク熱 スラク後 RESIS-CLASS,22.0,400.0,Fuji Electric,FRENIC-Std 22kW 400V,"要求仕様と完全に一致(kW, 電圧, 周波数)。汎用性があり、用途に適合"
+2,転回向方 ROTATION スラク熱 スラク後 RESIS-CLASS,22.0,400.0,Fuji Electric,FRENIC-Std 30kW 400V,要求kWを上回り、他の仕様が一致。余裕を持った選択肢
+2,転回向方 ROTATION スラク熱 スラク後 RESIS-CLASS,22.0,400.0,Fuji Electric,FRENIC-Std 37kW 400V,さらに高いkWで、将来の拡張性を考慮。他の仕様は一致
+3,式 1 ) 式 CONTROLMETHODTSIL 方御製方動起 VECVEGVECVECVEC 요 VECVECVECVECWsWGRO の用類,1.5,400.0,Fuji Electric,FRENIC-Std 1.5kW 400V,要求仕様と完全に一致（kW、電圧、周波数）。汎用インバータで適合。
+3,式 1 ) 式 CONTROLMETHODTSIL 方御製方動起 VECVEGVECVECVEC 요 VECVECVECVECWsWGRO の用類,1.5,400.0,Fuji Electric,FRENIC-Std 2.2kW 400V,要求kW以上で最も近い。電圧、周波数一致。汎用インバータで適合。
+3,式 1 ) 式 CONTROLMETHODTSIL 方御製方動起 VECVEGVECVECVEC 요 VECVECVECVECWsWGRO の用類,1.5,400.0,Fuji Electric,FRENIC-Std 3.7kW 400V,要求kW以上。電圧、周波数一致。汎用インバータで適合。余裕あり。
+4,電VOLT8W,5.5,400.0,Fuji Electric,FRENIC-Std 5.5kW 400V,要求仕様と完全に一致（kW、電圧、周波数）
+4,電VOLT8W,5.5,400.0,Fuji Electric,FRENIC-Std 7.5kW 400V,要求kWを上回り、他の仕様が一致
+4,電VOLT8W,5.5,400.0,Fuji Electric,FRENIC-Std 11kW 400V,要求kWを大きく上回り、将来の拡張性に対応可能
+5,ト1形護方却ENCLOSURECOOLING6IP44IC416IP441C416IP44IC416,1.5,400.0,Fuji Electric,FRENIC-Std 1.5kW 400V,必要kWに完全一致、電圧・周波数も一致
+5,ト1形護方却ENCLOSURECOOLING6IP44IC416IP441C416IP44IC416,1.5,400.0,Fuji Electric,FRENIC-Std 2.2kW 400V,必要kWを上回り、電圧・周波数も一致
+5,ト1形護方却ENCLOSURECOOLING6IP44IC416IP441C416IP44IC416,1.5,400.0,Fuji Electric,FRENIC-Std 3.7kW 400V,必要kWを上回り、電圧・周波数も一致、余裕がある
+6,レイク,3.7,400.0,Fuji Electric,FRENIC-Std 3.7kW 400V,要求仕様と完全に一致(kW、電圧、周波数)。汎用性があり、レイク用途にも適用可能
+6,レイク,3.7,400.0,Fuji Electric,FRENIC-Std 5.5kW 400V,要求kWを上回り、他の仕様(電圧、周波数)が一致。余裕を持った選定が可能
+6,レイク,3.7,400.0,Fuji Electric,FRENIC-Std 7.5kW 400V,要求kWを大きく上回り、他の仕様(電圧、周波数)が一致。将来の拡張性を考慮した選定
+7,No.1 スタンド Ipa4600Max | 9590/1200 | | G/4 | = VECF/ED8.AT.SH.TS,1.5,400.0,Fuji Electric,FRENIC-Std 1.5kW 400V,必要kW(1.5)に完全一致、電圧(400V)・周波数(50Hz)も一致
+7,No.1 スタンド Ipa4600Max | 9590/1200 | | G/4 | = VECF/ED8.AT.SH.TS,1.5,400.0,Fuji Electric,FRENIC-Std 2.2kW 400V,必要kW(1.5)以上で最も近い、電圧(400V)・周波数(50Hz)も一致
+7,No.1 スタンド Ipa4600Max | 9590/1200 | | G/4 | = VECF/ED8.AT.SH.TS,1.5,400.0,Fuji Electric,FRENIC-Std 3.7kW 400V,必要kW(1.5)以上、電圧(400V)・周波数(50Hz)も一致、余裕がある
+8,No.2 スタンド 160050/1200 | (1/45VEGF/FD1QOLOEA,3.7,400.0,Fuji Electric,FRENIC-Std 3.7kW 400V,要求仕様と完全に一致（kW、電圧、周波数）
+8,No.2 スタンド 160050/1200 | (1/45VEGF/FD1QOLOEA,3.7,400.0,Fuji Electric,FRENIC-Std 5.5kW 400V,必要kW以上で最も近い容量、他の仕様は一致
+8,No.2 スタンド 160050/1200 | (1/45VEGF/FD1QOLOEA,3.7,400.0,Fuji Electric,FRENIC-Std 7.5kW 400V,2番目に近い大きめの容量、他の仕様は一致
+9,No.4 スタンド 1600Max | 25n/1200| oo| = VECF/FDA.RT.SH.TS,5.5,400.0,Fuji Electric,FRENIC-Std 5.5kW 400V,必要kWに完全一致、電圧・周波数も一致
+9,No.4 スタンド 1600Max | 25n/1200| oo| = VECF/FDA.RT.SH.TS,5.5,400.0,Fuji Electric,FRENIC-Std 7.5kW 400V,必要kWより大きく余裕あり、電圧・周波数一致
+9,No.4 スタンド 1600Max | 25n/1200| oo| = VECF/FDA.RT.SH.TS,5.5,400.0,Fuji Electric,FRENIC-Std 11kW 400V,必要kWより十分大きく、電圧・周波数一致、将来の拡張性考慮
+10,No.5 スタンド IM800Max | go/1soo | n/p| 半凌 VECF/FDIB.RT.SH.TS,7.5,400.0,Fuji Electric,FRENIC-Std 7.5kW 400V,必要kWに完全一致、電圧・周波数も一致
+10,No.5 スタンド IM800Max | go/1soo | n/p| 半凌 VECF/FDIB.RT.SH.TS,7.5,400.0,Fuji Electric,FRENIC-Std 11kW 400V,必要kW以上で最も近い、電圧・周波数一致
+10,No.5 スタンド IM800Max | go/1soo | n/p| 半凌 VECF/FDIB.RT.SH.TS,7.5,400.0,Fuji Electric,FRENIC-Std 15kW 400V,必要kW以上で2番目に近い、電圧・周波数一致
+11,No.6 スタンド IM1IpaaB00Max1750/1500 |1/10.4)) = VEC1F/FDAyRT.SH.TS,7.5,400.0,Fuji Electric,FRENIC-Std 7.5kW 400V,要求仕様と完全に一致する出力、電圧、周波数を持つ
+11,No.6 スタンド IM1IpaaB00Max1750/1500 |1/10.4)) = VEC1F/FDAyRT.SH.TS,7.5,400.0,Fuji Electric,FRENIC-Std 11kW 400V,要求仕様を上回る出力で、電圧と周波数が一致
+11,No.6 スタンド IM1IpaaB00Max1750/1500 |1/10.4)) = VEC1F/FDAyRT.SH.TS,7.5,400.0,Fuji Electric,FRENIC-Std 15kW 400V,要求仕様を大きく上回る出力で、電圧と周波数が一致
+12,No.7スタンド800750/1500(1/8.4)VEC1F/FDMI,11.0,400.0,Fuji Electric,FRENIC-Std 11kW 400V,必要kWと完全一致、電圧・周波数も一致
+12,No.7スタンド800750/1500(1/8.4)VEC1F/FDMI,11.0,400.0,Fuji Electric,FRENIC-Std 15kW 400V,必要kWを上回り、電圧・周波数一致、余裕あり
+12,No.7スタンド800750/1500(1/8.4)VEC1F/FDMI,11.0,400.0,Fuji Electric,FRENIC-Std 18.5kW 400V,必要kWを大きく上回り、電圧・周波数一致、さらに余裕あり
+13,No.8 スタンド a800750/1500luz5| = 8 | VEC1F/FD1ISSMsmIS,11.0,400.0,Fuji Electric,FRENIC-Std 11kW 400V,要求仕様の11kWに完全一致し、電圧400V、周波数50Hzも一致。汎用性があり、基本的な要件を満たしている。
+13,No.8 スタンド a800750/1500luz5| = 8 | VEC1F/FD1ISSMsmIS,11.0,400.0,Fuji Electric,FRENIC-Std 15kW 400V,11kWより余裕のある15kWで、電圧400V、周波数50Hzが一致。将来的な負荷増加に対応可能。
+13,No.8 スタンド a800750/1500luz5| = 8 | VEC1F/FD1ISSMsmIS,11.0,400.0,Fuji Electric,FRENIC-Std 18.5kW 400V,さらに余裕のある18.5kWで、電圧400V、周波数50Hzが一致。より大きな負荷変動にも対応可能。
+14,No.9 スタンド a800750/1500asp| = VEGF/FD1SUSSE,11.0,400.0,Fuji Electric,FRENIC-Std 11kW 400V,必要kW(11.0)に完全一致、電圧(400V)と周波数(50Hz)も一致
+14,No.9 スタンド a800750/1500asp| = VEGF/FD1SUSSE,11.0,400.0,Fuji Electric,FRENIC-Std 15kW 400V,必要kW(11.0)以上で最も近い、電圧(400V)と周波数(50Hz)も一致
+14,No.9 スタンド a800750/1500asp| = VEGF/FD1SUSSE,11.0,400.0,Fuji Electric,FRENIC-Std 18.5kW 400V,必要kW(11.0)以上で2番目に近い、電圧(400V)と周波数(50Hz)も一致
+15,No.10 スタンド a80075/15004 の | PE | VEC1F/FD1AUSRSDSIB,15.0,400.0,Fuji Electric,FRENIC-Std 15kW 400V,要求仕様の15kWに完全一致。電圧400V、周波数50Hzも一致。
+15,No.10 スタンド a80075/15004 の | PE | VEC1F/FD1AUSRSDSIB,15.0,400.0,Fuji Electric,FRENIC-Std 18.5kW 400V,要求仕様の15kWを上回り、余裕がある。電圧400V、周波数50Hzも一致。
+15,No.10 スタンド a80075/15004 の | PE | VEC1F/FD1AUSRSDSIB,15.0,400.0,Fuji Electric,FRENIC-Std 22kW 400V,要求仕様の15kWを大きく上回り、将来の拡張性がある。電圧400V、周波数50Hzも一致。
+16,INo.11 スタンド oyB00750/1500 | (1/4) mu = VEC1E/ED1BRT、SH、 TS,15.0,400.0,Fuji Electric,FRENIC-Std 15kW 400V,要求仕様の15kWに完全一致し、電圧400V、周波数50Hzも合致。汎用性があり、基本要件を満たす最適な選択。
+16,INo.11 スタンド oyB00750/1500 | (1/4) mu = VEC1E/ED1BRT、SH、 TS,15.0,400.0,Fuji Electric,FRENIC-Std 18.5kW 400V,要求仕様の15kWをやや上回り、余裕がある。電圧400V、周波数50Hzも合致。将来的な負荷増加に対応可能。
+16,INo.11 スタンド oyB00750/1500 | (1/4) mu = VEC1E/ED1BRT、SH、 TS,15.0,400.0,Fuji Electric,FRENIC-Std 22kW 400V,要求仕様の15kWを上回り、十分な余裕がある。電圧400V、周波数50Hzも合致。大きな負荷変動や将来の拡張性を考慮した選択。
+17,No.12 スタンド = B00Max | oso/iso0|t1/24| 2VECF/FD18.RT.SH.TS,15.0,400.0,Fuji Electric,FRENIC-Std 15kW 400V,要求仕様の15kWに完全一致し、電圧400V、周波数50Hzも一致
+17,No.12 スタンド = B00Max | oso/iso0|t1/24| 2VECF/FD18.RT.SH.TS,15.0,400.0,Fuji Electric,FRENIC-Std 18.5kW 400V,要求仕様の15kWを上回り、電圧400V、周波数50Hzも一致。余裕を持った選択
+17,No.12 スタンド = B00Max | oso/iso0|t1/24| 2VECF/FD18.RT.SH.TS,15.0,400.0,Fuji Electric,FRENIC-Std 22kW 400V,要求仕様の15kWを大きく上回り、電圧400V、周波数50Hzも一致。将来の拡張性を考慮
+18,電容,75.0,400.0,Fuji Electric,FRENIC-Std 75kW 400V,必要kWに完全一致、電圧・周波数も一致
+18,電容,75.0,400.0,Fuji Electric,FRENIC-Std 90kW 400V,必要kWを上回り、電圧・周波数一致、余裕あり
+18,電容,75.0,400.0,Fuji Electric,FRENIC-Std 110kW 400V,必要kWを大きく上回り、電圧・周波数一致、将来の拡張性
+19,類,7.5,400.0,Fuji Electric,FRENIC-Std 7.5kW 400V,"要求仕様と完全に一致(kW,電圧,周波数)。汎用性あり。"
+19,類,7.5,400.0,Fuji Electric,FRENIC-Std 11kW 400V,要求kWを上回り、他の仕様が一致。余裕を持った選択。
+19,類,7.5,400.0,Fuji Electric,FRENIC-Std 15kW 400V,さらに大きな余裕がある。将来の拡張性を考慮。
+20,le2x Tool,1.5,400.0,Fuji Electric,FRENIC-Std 1.5kW 400V,完全に要求仕様に一致。kW、電圧、周波数が全て合致。
+20,le2x Tool,1.5,400.0,Fuji Electric,FRENIC-Std 2.2kW 400V,kWが要求より大きいが最も近い。他の仕様は一致。
+20,le2x Tool,1.5,400.0,Fuji Electric,FRENIC-Std 3.7kW 400V,kWが要求より大きいが、余裕を持たせる場合に適する。他の仕様は一致。
+21,Ne1exF e001sooavo sol1a10-7.00-.7 06 Tova 609 500 co To0011500,1.5,400.0,Fuji Electric,FRENIC-Std 1.5kW 400V,完全に仕様に一致。必要kW、電圧、周波数が全て合致。
+21,Ne1exF e001sooavo sol1a10-7.00-.7 06 Tova 609 500 co To0011500,1.5,400.0,Fuji Electric,FRENIC-Std 2.2kW 400V,必要kWを上回り、電圧と周波数が一致。余裕を持った選択。
+21,Ne1exF e001sooavo sol1a10-7.00-.7 06 Tova 609 500 co To0011500,1.5,400.0,Fuji Electric,FRENIC-Std 3.7kW 400V,さらに大きな余裕がある。将来の拡張性を考慮した場合の選択肢。
+22,egmyysmlizsgli25oolrrSarovalLeSSw,132.0,400.0,Fuji Electric,FRENIC-Std 132kW 400V,要求kWと完全一致、電圧・周波数も一致
+22,egmyysmlizsgli25oolrrSarovalLeSSw,132.0,400.0,Fuji Electric,FRENIC-Std 160kW 400V,要求kWを上回り、電圧・周波数一致
+22,egmyysmlizsgli25oolrrSarovalLeSSw,132.0,400.0,Fuji Electric,FRENIC-Std 185kW 400V,要求kWを上回り、電圧・周波数一致、余裕あり

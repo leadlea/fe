@@ -1,0 +1,23 @@
+﻿source,用途,出力(kW),rpm_base,torque_kgm,電圧(V),is_anomaly,reason,suggest
+out/5/fe_list_heavy.csv,"品ACCESSORY以記属付20SH.SH,SH,SH.SH.SH.SH,SH.SH.SH.SH.SH.",8.0,,,400.0,True,用途の記述が不自然で理解困難,用途の記述を確認し、正確な情報に修正してください
+out/5/fe_list_heavy.csv,転回向方 ROTATION スラク熱 スラク後 RESIS-CLASS,17.0,,,400.0,False,出力、電圧ともに一般的な範囲内です。,rpm_baseとtorque_kgmの値が不明ですが、他のパラメータは正常範囲内です。必要に応じてこれらの値を確認してください。
+out/5/fe_list_heavy.csv,CONTROLMETHODTSIL方御製方動起VECVEGVECVECVECVECVECVECVECWsWGROの用類,1.0,1150.0,,400.0,True,用途の記述が不自然で理解困難,用途の記述を確認し、正しい情報に修正してください
+out/5/fe_list_heavy.csv,電VOLT8W,4.0,541.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、torque_kgmの値が欠落しているため、可能であれば補完することをお勧めします。
+out/5/fe_list_heavy.csv,ト1形護方却ENCLOSURECOOLING6IP44IC416IP441C416IP44IC416,1.0,,,400.0,False,出力、電圧ともに一般的な範囲内です。,rpm_baseとtorque_kgmのデータが欠落しているため、可能であればこれらの情報を追加することをお勧めします。
+out/5/fe_list_heavy.csv,レイク,2.0,1200.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、torque_kgmの値が欠落しているため、可能であれば補完することをお勧めします。
+out/5/fe_list_heavy.csv,No.1スタンドIpa4600Max,1.0,1200.0,,400.0,True,出力が極端に小さい,出力値の確認が必要。1.0kWは重工業用途としては非常に小さい。
+out/5/fe_list_heavy.csv,No.2スタンド160050/1200,2.0,1200.0,,400.0,True,出力が非常に小さい,出力値の確認が必要。2.0kWは重工業用途としては極めて小さい可能性がある
+out/5/fe_list_heavy.csv,No.4スタンド1600Max 25n/1200 VECF/FDA.RT.SH.TS,4.0,1200.0,,400.0,True,出力が非常に小さい,出力4.0kWは重工業用途としては極めて小さいため、データ入力ミスの可能性がある。確認が必要。
+out/5/fe_list_heavy.csv,No.5スタンドIM800Max go/1soo n/p 半凌VECF/FDIB.RT.SH.TS,5.0,1500.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、torque_kgmの値が欠落しているため、可能であれば確認することをお勧めします。
+out/5/fe_list_heavy.csv,No.6スタンドIM1IpaaB00Max1750/1500,6.0,1500.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、トルクデータが欠落しているため、可能であれば追加することをお勧めします。
+out/5/fe_list_heavy.csv,No.7スタンド800750/1500(1/8.4)VEC1F/FDMI,7.0,1500.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、torque_kgmの値が欠落しているため、可能であれば確認することをお勧めします。
+out/5/fe_list_heavy.csv,No.8スタンドa800750/1500luz5,8.0,1500.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、torque_kgmの値が欠落しているため、可能であれば確認することをお勧めします。
+out/5/fe_list_heavy.csv,No.9スタンドa800750/1500asp=VEGF/FD1SUSSE,9.0,,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、rpm_baseとtorque_kgmの値が欠落しているため、可能であればこれらの情報を追加することをお勧めします。
+out/5/fe_list_heavy.csv,No.10スタンドa80075/15004のPEVEC1F/FD1AUSRSDSIB,10.0,1500.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、トルクデータが欠落しているため、可能であれば補完することをお勧めします。
+out/5/fe_list_heavy.csv,No.11スタンドoyB00750/1500(1/4)mu=VEC1E/ED1BRT、SH、TS,11.0,1500.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、torque_kgmの値が欠落しているため、可能であれば確認することをお勧めします。
+out/5/fe_list_heavy.csv,No.12スタンドB00Max,12.0,1500.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、torque_kgmの値が欠落しているため、可能であれば補完することをお勧めします。
+out/7/fe_list_heavy.csv,電容,58.0,1005.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、torque_kgmの値が欠落しているため、可能であれば補完することをお勧めします。
+out/7/fe_list_heavy.csv,類,6.0,2018.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、トルクデータが欠落しているため、可能であれば補完することをお勧めします。
+out/7/fe_list_heavy.csv,le2x Tool,1.26,700.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、torque_kgmの値が欠落しているため、可能であれば補完することをお勧めします。
+out/7/fe_list_heavy.csv,Ne1exF e001sooavo sol1a10-7.00-.7 06 Tova 609 500 co To0011500,1.0,609.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題は見られませんが、トルクデータが欠落しているため、可能であれば補完することをお勧めします。
+out/7/fe_list_heavy.csv,egmyysmlizsgli25oolrrSarovalLeSSw,99.0,600.0,,400.0,False,全てのパラメータが一般的な範囲内にあります。,特に問題はありませんが、torque_kgmの値が欠落しているため、可能であれば確認することをお勧めします。
