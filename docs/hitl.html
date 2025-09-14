@@ -1,578 +1,183 @@
 <!doctype html>
 <html lang="ja">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HITL CSV Editor – MVP</title>
-  <style>
-    :root {
-      --bg: #0f172a;          /* slate-900 */
-      --panel: #111827;       /* gray-900 */
-      --muted: #1f2937;       /* gray-800 */
-      --line: #334155;        /* slate-600 */
-      --text: #e5e7eb;        /* gray-200 */
-      --sub: #9ca3af;         /* gray-400 */
-      --brand: #22d3ee;       /* cyan-400 */
-      --ok: #34d399;          /* emerald-400 */
-      --warn: #f59e0b;        /* amber-500 */
-      --err: #ef4444;         /* red-500 */
-      --focus: #a78bfa;       /* violet-400 */
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0; background: linear-gradient(180deg, #0b1020 0%, #0f172a 100%);
-      color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-    }
-    header {
-      position: sticky; top: 0; z-index: 10; backdrop-filter: blur(6px);
-      background: rgba(15, 23, 42, 0.8);
-      border-bottom: 1px solid var(--line);
-      padding: 12px 16px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
-    }
-    header h1 { margin: 0; font-size: 18px; letter-spacing: 0.2px; }
-    .badge { font-size: 12px; color: var(--bg); background: var(--brand); border-radius: 999px; padding: 2px 8px; margin-left: 8px; }
-
-    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-    .controls { display: flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
-    .controls label { font-size: 12px; color: var(--sub); }
-    .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-    .seg button { background: transparent; color: var(--text); border: none; padding: 8px 10px; cursor: pointer; font-size: 12px; }
-    .seg button.active { background: var(--muted); color: var(--brand); }
-
-    main { display: grid; grid-template-columns: 280px 1fr; gap: 16px; padding: 16px; }
-    aside { background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
-    aside h3 { margin: 8px 0 6px; font-size: 14px; }
-    aside p, aside li { color: var(--sub); font-size: 12px; line-height: 1.5; }
-    aside code { background: #0b1224; padding: 2px 6px; border-radius: 6px; border: 1px solid var(--line); }
-
-    .stage {
-      background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
-      display: grid; grid-template-rows: auto 1fr; min-height: 520px;
-    }
-    .stage-header { display: flex; gap: 8px; align-items: center; padding: 10px; border-bottom: 1px solid var(--line); background: rgba(0,0,0,0.2); }
-    .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
-    .tab { background: transparent; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; cursor: pointer; font-size: 12px; }
-    .tab.active { border-color: var(--brand); color: var(--brand); background: #07222b; }
-
-    .stage-tools { margin-left: auto; display: flex; gap: 8px; align-items: center; }
-    .btn { border: 1px solid var(--line); background: #0b1224; color: var(--text); padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; }
-    .btn.primary { border-color: var(--brand); color: var(--bg); background: var(--brand); }
-    .btn.warn { border-color: var(--warn); color: var(--bg); background: var(--warn); }
-    .btn.ghost { background: transparent; }
-    input[type="file"] { color: var(--sub); font-size: 12px; }
-
-    .panel { padding: 10px; display: grid; grid-template-rows: auto 1fr; gap: 8px; }
-    .stats { display: flex; gap: 10px; flex-wrap: wrap; }
-    .stat { font-size: 11px; color: var(--sub); background: #0b1224; border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; }
-
-    table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    thead th { position: sticky; top: 0; background: #0b1224; border-bottom: 1px solid var(--line); padding: 8px; text-align: left; }
-    tbody td { border-bottom: 1px dashed #1f2a40; padding: 6px 8px; vertical-align: top; }
-    tbody tr:nth-child(odd) td { background: rgba(255,255,255,0.01); }
-    td[contenteditable="true"] { outline: none; }
-    td:focus { box-shadow: inset 0 0 0 2px var(--focus); }
-
-    .invalid { background: rgba(239, 68, 68, 0.15) !important; border-bottom-color: var(--err) !important; }
-    .issue { background: rgba(245, 158, 11, 0.15) !important; }
-    .lowconf { background: rgba(34, 211, 238, 0.08) !important; outline: 1px dashed rgba(34, 211, 238, 0.5); }
-    .dirty { box-shadow: inset 0 0 0 2px rgba(167,139,250,0.5); }
-
-    .footer-note { font-size: 11px; color: var(--sub); padding: 8px 10px; border-top: 1px solid var(--line); background: rgba(0,0,0,0.2); }
-    .right { text-align: right; }
-
-    .hint { color: var(--sub); font-size: 11px; }
-    .kv { display: grid; grid-template-columns: 120px 1fr; gap: 8px; align-items: center; }
-    .kv input[type="text"], .kv input[type="number"] {
-      width: 100%; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: #0b1224; color: var(--text);
-    }
-    .switch { display: inline-flex; align-items: center; gap: 6px; }
-    .switch input { accent-color: var(--brand); }
-
-    .toast { position: fixed; right: 12px; bottom: 12px; background: #0b1224; border: 1px solid var(--line); padding: 10px 12px; border-radius: 10px; font-size: 12px; opacity: 0; transform: translateY(8px); transition: .25s ease; }
-    .toast.show { opacity: 1; transform: translateY(0); }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-  </style>
-</head>
-<body>
-  <header>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HITL Orchestrator MVP</title>
+<style>
+  body{margin:0;font-family:system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;background:#0f172a;color:#e5e7eb}
+  header{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #334155;background:#0b1224;position:sticky;top:0}
+  input,button{font-size:14px}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  main{display:grid;grid-template-columns:320px 1fr 420px;gap:16px;padding:16px}
+  section,aside{border:1px solid #334155;border-radius:12px;background:rgba(255,255,255,0.02);padding:12px;min-height:200px}
+  h3{margin:.2em 0 .6em 0}
+  .drop{border:2px dashed #475569;border-radius:12px;padding:24px;text-align:center;color:#94a3b8}
+  .drop.drag{background:rgba(34,211,238,.08);border-color:#22d3ee;color:#22d3ee}
+  .steps .card{border:1px solid #334155;border-radius:10px;margin-bottom:8px;padding:8px}
+  .steps .card .head{display:flex;align-items:center;gap:8px}
+  .btn{border:1px solid #334155;background:#0b1224;color:#e5e7eb;border-radius:8px;padding:6px 10px;cursor:pointer}
+  .btn.primary{background:#22d3ee;color:#0b1224;border-color:#22d3ee}
+  .log{white-space:pre-wrap;background:#0b1224;border:1px solid #334155;border-radius:8px;padding:8px;max-height:180px;overflow:auto}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{border-bottom:1px dashed #1f2a40;padding:6px 8px}
+  th{position:sticky;top:0;background:#0b1224}
+  td[contenteditable="true"]{outline:none}
+  td:focus{box-shadow: inset 0 0 0 2px #a78bfa}
+  .mermaid{background:#0b1224;border-radius:8px;overflow:auto}
+  .hint{font-size:12px;color:#94a3b8}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });</script>
+<header>
+  <div class="row">
+    <b>HITL Orchestrator MVP</b>
+    <span class="hint">PDF→パイプライン→CSV編集→再実行→図面</span>
+  </div>
+  <div class="row">
+    <label>API BASE</label>
+    <input id="api" size="32" value="https://localhost:8443">
+    <button class="btn" onclick="saveApi()">Save</button>
+  </div>
+</header>
+<main>
+  <section>
+    <h3>1) PDFをドロップ</h3>
+    <div id="drop" class="drop">ここにPDFをドロップ</div>
+    <div class="hint">run_id: <span id="runid">-</span></div>
+    <hr>
+    <h3>2) ステップ</h3>
+    <div id="steps" class="steps"></div>
+  </section>
+  <section>
+    <h3>3) CSVエディタ</h3>
     <div class="row">
-      <h1>HITL CSV Editor <span class="badge">MVP</span></h1>
+      <input id="csvPath" size="40" placeholder="例: out/run-YYYYMMDD-HHMMSS/fe_list_norm.csv">
+      <button class="btn" onclick="loadCSV()">読込</button>
+      <button class="btn primary" onclick="saveCSV()">保存</button>
     </div>
-    <div class="controls">
-      <div class="seg" id="roleSeg">
-        <button data-val="production" class="active" title="集計対象">production</button>
-        <button data-val="calibration" title="検証/調整用 (集計除外)">calibration</button>
-      </div>
-      <div class="switch">
-        <label>aggregate</label>
-        <input type="checkbox" id="aggregateFlag" checked>
-      </div>
-      <div class="kv">
-        <label class="right">conf閾値 (0-1)</label>
-        <input type="number" step="0.05" min="0" max="1" id="confThreshold" value="0.80">
-      </div>
-      <div class="kv" style="min-width:240px;">
-        <label class="right">API BASE</label>
-        <input type="text" id="apiBase" placeholder="例: https://localhost:8443" value="https://localhost:8443">
-      </div>
+    <div id="csvWrap" style="margin-top:8px; border:1px solid #334155; border-radius:10px; overflow:auto; max-height:60vh"></div>
+  </section>
+  <aside>
+    <h3>4) 図面(Mermaid)</h3>
+    <div class="row">
+      <input id="mmdPath" size="36" placeholder="例: out/B_full/wiring.md">
+      <button class="btn" onclick="loadMermaid()">読込</button>
     </div>
-  </header>
+    <div id="mmd" class="mermaid" style="margin-top:8px; padding:8px; max-height:65vh"></div>
+  </aside>
+</main>
+<script>
+const $ = (s)=>document.querySelector(s);
+const api = ()=> localStorage.getItem('apiBase') || $('#api').value || location.origin;
+function saveApi(){ localStorage.setItem('apiBase',$('#api').value); alert('saved'); }
+$('#api').value = api();
 
-  <main>
-    <aside>
-      <h3>使い方（最小MVP）</h3>
-      <ol>
-        <li>タブから編集したい <code>CSV</code> を選び、ファイルを読み込み</li>
-        <li>セルを直接編集（バリデーションは <code>30_motor_list_normalized</code> に適用）</li>
-        <li>必要に応じて <code>conf</code> 低信頼の強調／<code>35_issues</code> の指摘重ね表示</li>
-        <li><b>CSVダウンロード</b> で保存、<b>差分パッチ</b> を生成して保存</li>
-        <li><b>再計算</b> を押すと API に <code>CSV + patch + metadata</code> をPOST（APIは任意実装）</li>
-      </ol>
-      <p class="hint">実運用では、保存をAPIへPOSTし <span class="mono">/api/recalculate</span> でETL/選定/集計を再実行する想定です。</p>
+// Load config
+let STEPS = [];
+fetch(api()+"/api/config").then(r=>r.json()).then(j=>{
+  STEPS = j.steps || [];
+  renderSteps();
+});
 
-      <h3>対象ステージ</h3>
-      <ul>
-        <li><code>10_ocr_raw.csv</code>: OCRの生データ</li>
-        <li><code>20_table_cells.csv</code>: 表セル抽出</li>
-        <li><code>30_motor_list_normalized.csv</code>: 正規化リスト（<b>編集/検証対象</b>）</li>
-        <li><code>35_issues.csv</code>: 検証結果（重ね表示に使用）</li>
-        <li><code>40_inverter_selection.csv</code>, <code>41_transformer_selection.csv</code></li>
-      </ul>
-      <h3>検証ルール（抜粋：30_*）</h3>
-      <ul>
-        <li><b>必須</b>: <code>item_no</code>, <code>型式</code></li>
-        <li><b>数値</b>: <code>電圧(V)</code>, <code>容量_kW</code>, <code>周波数(Hz)</code>, <code>極数</code></li>
-        <li><b>範囲</b>: <code>容量_kW &gt; 0</code>, <code>周波数 in {50,60}</code>（空なら可）</li>
-        <li><b>語彙</b>: <code>相数 in {1,3}</code>（空なら可）</li>
-      </ul>
-      <p class="hint">列名の例：<code>item_no, 型式, 電圧(V), 容量_kW, 周波数(Hz), 極数, 相数, 備考, conf</code></p>
-    </aside>
+// Drag&Drop
+const drop = $('#drop');
+drop.addEventListener('dragover', e=>{ e.preventDefault(); drop.classList.add('drag'); });
+drop.addEventListener('dragleave', e=>{ drop.classList.remove('drag'); });
+drop.addEventListener('drop', async e=>{
+  e.preventDefault(); drop.classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if(!f){ alert('ファイルがありません'); return; }
+  if(!f.name.toLowerCase().endsWith('.pdf')){ alert('PDFを選んでください'); return; }
+  const fd = new FormData(); fd.append('file', f);
+  const res = await fetch(api()+"/api/upload_pdf",{method:'POST', body: fd});
+  const j = await res.json();
+  if(!j.ok){ alert('アップロード失敗'); return; }
+  window.runId = j.run_id;
+  $('#runid').textContent = window.runId;
+  renderSteps();
+});
 
-    <section class="stage">
-      <div class="stage-header">
-        <div class="tabs" id="tabs"></div>
-        <div class="stage-tools">
-          <input type="file" id="fileInput" accept=".csv" />
-          <button class="btn" id="downloadCsv">CSVダウンロード</button>
-          <button class="btn" id="downloadPatch">差分パッチ</button>
-          <button class="btn primary" id="recalc">再計算 API POST</button>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="stats" id="stats"></div>
-        <div id="tableWrap" style="overflow:auto; border:1px solid var(--line); border-radius: 10px; max-height: 62vh;"></div>
-      </div>
-      <div class="footer-note">
-        メモ: <span class="mono">role</span> と <span class="mono">aggregate</span> は <span class="mono">metadata</span> に含めてPOSTされます.<br/>
-        パッチキーは <span class="mono">row_id</span> / <span class="mono">id</span> / <span class="mono">item_no</span> があれば優先. なければ <span class="mono">row_index</span> を使用します.
-      </div>
-    </section>
-  </main>
-
-  <div class="toast" id="toast">saved.</div>
-
-  <script>
-  // ======= Config =======
-  const STAGES = [
-    '10_ocr_raw.csv',
-    '20_table_cells.csv',
-    '30_motor_list_normalized.csv',
-    '35_issues.csv',
-    '40_inverter_selection.csv',
-    '41_transformer_selection.csv'
-  ];
-  const RECALC_PATH = '/api/recalculate';
-
-  // ======= State =======
-  const state = {
-    role: 'production',
-    aggregate: true,
-    confThreshold: 0.80,
-    apiBase: '',
-    currentStage: STAGES[2], // default to 30_
-    datasets: {
-      // stage: { headers:[], rows:[[]], original:[[]], key: 'row_id' | etc, issues: { key+col -> true } }
-    }
-  };
-
-  // ======= Helpers =======
-  const $ = sel => document.querySelector(sel);
-  const el = (tag, props={}, ...children) => {
-    const e = document.createElement(tag);
-    Object.entries(props).forEach(([k,v]) => {
-      if (k === 'class') e.className = v; else if (k === 'dataset') Object.assign(e.dataset, v); else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v);
-    });
-    children.forEach(c => e.append(c));
-    return e;
-  };
-
-  function showToast(msg) {
-    const t = $('#toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(()=> t.classList.remove('show'), 1800);
-  }
-
-  // Simple CSV parser/stringifier with quotes support
-  function parseCSV(text, delimiter=',') {
-    const rows = []; let row = []; let cur = '';
-    let inQuotes = false; let i = 0;
-    for (; i < text.length; i++) {
-      const ch = text[i], next = text[i+1];
-      if (inQuotes) {
-        if (ch === '"' && next === '"') { cur += '"'; i++; } // escaped quote
-        else if (ch === '"') { inQuotes = false; }
-        else { cur += ch; }
-      } else {
-        if (ch === '"') { inQuotes = true; }
-        else if (ch === delimiter) { row.push(cur); cur = ''; }
-        else if (ch === '\\n') { row.push(cur); rows.push(row); row = []; cur = ''; }
-        else if (ch === '\\r') { /* ignore CR */ }
-        else { cur += ch; }
-      }
-    }
-    if (cur.length || row.length) { row.push(cur); rows.push(row); }
-    // Trim trailing empty last row if any
-    if (rows.length && rows[rows.length-1].every(c => c === '')) rows.pop();
-    return rows;
-  }
-
-  function stringifyCSV(rows, delimiter=',') {
-    const esc = (v) => {
-      const s = v == null ? '' : String(v);
-      if (s.includes('"') || s.includes('\\n') || s.includes('\\r') || s.includes(delimiter)) {
-        return '"' + s.replaceAll('"', '""') + '"';
-      }
-      return s;
-    };
-    return rows.map(r => r.map(esc).join(delimiter)).join('\\n');
-  }
-
-  function detectKey(headers) {
-    const candidates = ['row_id', 'id', 'item_no'];
-    for (const c of candidates) if (headers.includes(c)) return c;
-    return null; // fallback to row_index
-  }
-
-  function toNumberOrNull(v) {
-    if (v == null || v === '') return null;
-    const n = Number(String(v).replace(/[,\\s]/g, ''));
-    return Number.isFinite(n) ? n : NaN;
-  }
-
-  // Validation schema for 30_motor_list_normalized
-  const schema30 = {
-    required: ['item_no', '型式'],
-    numeric: ['電圧(V)', '容量_kW', '周波数(Hz)', '極数'],
-    range: [
-      { col: '容量_kW', test: (n)=> n == null || n > 0 },
-      { col: '周波数(Hz)', test: (n)=> n == null || n === 50 || n === 60 },
-    ],
-    vocab: [
-      { col: '相数', allow: ['1','3','',null] },
-    ]
-  };
-
-  function validateCell(stage, headers, rIdx, cIdx, val) {
-    const col = headers[cIdx];
-    if (stage !== '30_motor_list_normalized.csv') return { ok: true };
-
-    const v = val == null ? '' : String(val).trim();
-    if (schema30.required.includes(col) && v === '') return { ok: false, reason: 'required' };
-
-    if (schema30.numeric.includes(col)) {
-      if (v === '') return { ok: true };
-      const n = toNumberOrNull(v);
-      if (!Number.isFinite(n)) return { ok: false, reason: 'not numeric' };
-      for (const r of schema30.range) if (r.col === col) return { ok: !!r.test(n), reason: 'range' };
-      return { ok: true };
-    }
-
-    for (const vb of schema30.vocab) {
-      if (vb.col === col) {
-        if (!vb.allow.includes(v)) return { ok: false, reason: 'vocab' };
-      }
-    }
-
-    return { ok: true };
-  }
-
-  function computeIssuesIndex(stage) {
-    // For 35_issues.csv, build set: key+col -> true
-    const issues = new Set();
-    const dsIssues = state.datasets['35_issues.csv'];
-    const dsStage = state.datasets[stage];
-    if (!dsIssues || !dsStage) return issues;
-
-    const keyCol = dsStage.key || 'row_index';
-    const idxKeyInIssues = dsIssues.headers.indexOf('row_key');
-    const idxField = dsIssues.headers.indexOf('field');
-    if (idxKeyInIssues < 0 || idxField < 0) return issues;
-
-    for (let i=0;i<dsIssues.rows.length;i++) {
-      const key = dsIssues.rows[i][idxKeyInIssues];
-      const field = dsIssues.rows[i][idxField];
-      if (key && field) issues.add(`${key}::${field}`);
-    }
-    return issues;
-  }
-
-  function renderTable(stage) {
-    const wrap = $('#tableWrap'); wrap.innerHTML = '';
-    const ds = state.datasets[stage];
-    if (!ds) { wrap.append(document.createTextNode('CSVファイルを読み込んでください。')); updateStats(); return; }
-
-    const tbl = document.createElement('table');
-    const thead = document.createElement('thead');
-    const thr = document.createElement('tr');
-    ds.headers.forEach(h => {
-      const th = document.createElement('th'); th.textContent = h; thr.appendChild(th);
-    });
-    thead.appendChild(thr); tbl.appendChild(thead);
-
-    const tbody = document.createElement('tbody');
-    const confIdx = ds.headers.indexOf('conf');
-    const issuesIndex = computeIssuesIndex(stage);
-
-    for (let r=0; r<ds.rows.length; r++) {
-      const tr = document.createElement('tr');
-      const rowKeyVal = ds.key ? ds.rows[r][ds.headers.indexOf(ds.key)] : String(r);
-      for (let c=0; c<ds.headers.length; c++) {
-        const td = document.createElement('td');
-        td.setAttribute('contenteditable','true');
-        td.dataset.r = String(r); td.dataset.c = String(c);
-        const v = ds.rows[r][c] ?? '';
-        td.textContent = v;
-
-        // Validation
-        const { ok } = validateCell(stage, ds.headers, r, c, v);
-        if (!ok) td.classList.add('invalid');
-
-        // conf highlight
-        if (confIdx >= 0 && c === confIdx) {
-          const n = toNumberOrNull(v);
-          if (Number.isFinite(n) && n < state.confThreshold) td.classList.add('lowconf');
-        }
-
-        // issues overlay
-        const issueKey = `${rowKeyVal}::${ds.headers[c]}`;
-        if (issuesIndex.has(issueKey)) td.classList.add('issue');
-
-        td.addEventListener('input', ()=> onEditCell(stage, td));
-        tr.appendChild(td);
-      }
-      tbody.appendChild(tr);
-    }
-    tbl.appendChild(tbody);
-    wrap.appendChild(tbl);
-    updateStats();
-  }
-
-  function onEditCell(stage, td) {
-    const ds = state.datasets[stage]; if (!ds) return;
-    const r = Number(td.dataset.r), c = Number(td.dataset.c);
-    const newVal = td.textContent ?? '';
-    ds.rows[r][c] = newVal;
-
-    // mark dirty if value changed from original
-    const was = (ds.original[r] ?? [])[c] ?? '';
-    td.classList.toggle('dirty', newVal !== was);
-
-    // re-validate
-    const { ok } = validateCell(stage, ds.headers, r, c, newVal);
-    td.classList.toggle('invalid', !ok);
-
-    // conf re-check
-    const confIdx = ds.headers.indexOf('conf');
-    if (confIdx === c) {
-      const n = toNumberOrNull(newVal);
-      if (Number.isFinite(n) && n < state.confThreshold) td.classList.add('lowconf');
-      else td.classList.remove('lowconf');
-    }
-
-    updateStats();
-  }
-
-  function updateStats() {
-    const stats = $('#stats'); stats.innerHTML = '';
-    const ds = state.datasets[state.currentStage];
-    if (!ds) return;
-
-    let invalid=0, dirty=0;
-    const wrap = $('#tableWrap');
-    wrap.querySelectorAll('td.invalid').forEach(()=> invalid++);
-    wrap.querySelectorAll('td.dirty').forEach(()=> dirty++);
-
-    const items = [
-      ['stage', state.currentStage],
-      ['rows', String(ds.rows.length)],
-      ['cols', String(ds.headers.length)],
-      ['invalid cells', String(invalid)],
-      ['edited cells', String(dirty)],
-      ['role', state.role],
-      ['aggregate', String(state.aggregate)],
-      ['conf<th', String(state.confThreshold)]
-    ];
-    for (const [k,v] of items) {
-      const d = document.createElement('div'); d.className = 'stat';
-      const b = document.createElement('b'); b.textContent = k + ': '; d.appendChild(b);
-      d.append(v);
-      stats.appendChild(d);
-    }
-  }
-
-  function download(filename, content, mime) {
-    const blob = new Blob([content], { type: mime });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = filename; a.click();
-    setTimeout(()=> URL.revokeObjectURL(a.href), 1000);
-  }
-
-  function getDataset(stage) { return state.datasets[stage]; }
-
-  function csvFromDataset(ds) { return stringifyCSV([ds.headers, ...ds.rows]); }
-
-  function buildPatch(stage) {
-    const ds = getDataset(stage);
-    if (!ds) return { stage, key: ds?.key || 'row_index', ops: [], meta: {} };
-
-    const ops = [];
-    for (let r=0; r<ds.rows.length; r++) {
-      const keyVal = ds.key ? ds.rows[r][ds.headers.indexOf(ds.key)] : String(r);
-      for (let c=0; c<ds.headers.length; c++) {
-        const cur = ds.rows[r][c] ?? '';
-        const was = (ds.original[r] ?? [])[c] ?? '';
-        if (cur !== was) {
-          ops.push({
-            op: 'replace',
-            row_index: r,
-            row_key: keyVal,
-            column: ds.headers[c],
-            old: was,
-            value: cur,
-          });
-        }
-      }
-    }
-    const meta = {
-      stage,
-      key: ds.key || 'row_index',
-      edited_at: new Date().toISOString(),
-      edited_by: navigator.userAgent,
-      role: state.role,
-      aggregate: state.aggregate,
-    };
-    return { meta, ops };
-  }
-
-  async function postRecalculate(stage) {
-    const ds = getDataset(stage);
-    if (!ds) { showToast('CSV未読込'); return; }
-
-    const apiBase = state.apiBase || '';
-    const url = apiBase + RECALC_PATH;
-    const body = {
-      metadata: {
-        stage,
-        role: state.role,
-        aggregate: state.aggregate,
-        conf_threshold: state.confThreshold,
-      },
-      csv: csvFromDataset(ds),
-      patch: buildPatch(stage)
-    };
-
-    try {
-      const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-      if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
-      const data = await res.json().catch(()=> ({}));
-      showToast('再計算リクエスト送信 OK');
-      console.log('recalculate response', data);
-    } catch (e) {
-      console.error(e);
-      showToast('POST失敗: ' + e.message);
-    }
-  }
-
-  // ======= UI Wiring =======
-  function buildTabs() {
-    const tabs = $('#tabs'); tabs.innerHTML = '';
-    STAGES.forEach(name => {
-      const b = document.createElement('button');
-      b.className = 'tab' + (name===state.currentStage?' active':'');
-      b.textContent = name.replace('.csv','');
-      b.addEventListener('click', ()=> switchStage(name));
-      tabs.appendChild(b);
-    });
-  }
-
-  function switchStage(name) {
-    state.currentStage = name;
-    buildTabs();
-    renderTable(name);
-  }
-
-  function onFileLoaded(stage, text) {
-    const rows = parseCSV(text);
-    if (!rows.length) return;
-    const headers = rows[0];
-    const data = rows.slice(1);
-    state.datasets[stage] = {
-      headers,
-      rows: data.map(r => r.slice()),
-      original: data.map(r => r.slice()),
-      key: detectKey(headers)
-    };
-    // If this was 35_issues for overlay, just re-render current
-    if (stage === '35_issues.csv') renderTable(state.currentStage);
-    else renderTable(stage);
-  }
-
-  // Header controls
-  document.getElementById('confThreshold').addEventListener('change', (e)=> {
-    const v = Number(e.target.value); state.confThreshold = Number.isFinite(v)? v : 0.8; renderTable(state.currentStage);
+function renderSteps(){
+  const wrap = $('#steps'); wrap.innerHTML = '';
+  if(!STEPS.length){ wrap.textContent = 'ステップが未定義です（pipeline.json を作成するか、既存スクリプトを同じフォルダに置いてください）'; return; }
+  STEPS.forEach((s,idx)=>{
+    const card = document.createElement('div'); card.className='card';
+    const head = document.createElement('div'); head.className='head';
+    head.innerHTML = `<b>${s.name}</b> <code style="font-size:12px;color:#94a3b8">${s.cmd}</code>`;
+    const btn = document.createElement('button'); btn.className='btn primary'; btn.textContent='実行';
+    btn.onclick = ()=> execStep(idx, s.name);
+    head.appendChild(btn);
+    card.appendChild(head);
+    const log = document.createElement('div'); log.className='log'; log.id = `log-${s.name}`; log.textContent='(ログなし)';
+    card.appendChild(log);
+    wrap.appendChild(card);
   });
-  document.getElementById('apiBase').addEventListener('change', (e)=> { state.apiBase = e.target.value.trim(); });
-  document.getElementById('aggregateFlag').addEventListener('change', (e)=> { state.aggregate = !!e.target.checked; updateStats(); });
-  document.getElementById('roleSeg').addEventListener('click', (e)=> {
-    if (e.target.tagName !== 'BUTTON') return;
-    [...document.getElementById('roleSeg').children].forEach(b=> b.classList.remove('active'));
-    e.target.classList.add('active');
-    state.role = e.target.dataset.val;
-    // aggregate flag follows role default
-    if (state.role === 'calibration') { document.getElementById('aggregateFlag').checked = false; state.aggregate = false; }
-    if (state.role === 'production') { document.getElementById('aggregateFlag').checked = true; state.aggregate = true; }
-    updateStats();
+}
+
+async function execStep(idx, name){
+  if(!window.runId){ alert('先にPDFをドロップしてください'); return; }
+  const r = await fetch(api()+"/api/exec_step", {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({run_id: window.runId, step_index: idx})});
+  const j = await r.json();
+  document.getElementById(`log-${name}`).textContent = j.log || '(no log)';
+  if(!j.ok){ alert(`ステップ失敗(exit=${j.exit_code}). コマンドを確認してください。`); }
+  else{ alert('OK'); }
+}
+
+function parseCSV(text){
+  const rows = []; let row = []; let cur = ''; let q=false;
+  for(let i=0;i<text.length;i++){ const ch=text[i], nx=text[i+1];
+    if(q){ if(ch=='"' && nx=='"'){cur+='"'; i++;} else if(ch=='"'){q=false;} else {cur+=ch;} }
+    else { if(ch=='"'){q=true;} else if(ch==','){row.push(cur);cur='';} else if(ch=='\n'){row.push(cur);rows.push(row);row=[];cur='';} else if(ch=='\r'){ } else {cur+=ch;} }
+  } if(cur.length||row.length){row.push(cur);rows.push(row);} return rows;
+}
+function toCSV(rows){ const esc=v=>{const s=(v??'').toString(); return /[",\n\r]/.test(s)?'"'+s.replaceAll('"','""')+'"':s}; return rows.map(r=>r.map(esc).join(',')).join('\n'); }
+
+async function loadCSV(){
+  const p = $('#csvPath').value.trim(); if(!p){ alert('pathを入力'); return; }
+  const r = await fetch(api()+"/api/read_csv?path="+encodeURIComponent(p));
+  if(!r.ok){ alert('読込失敗'); return; }
+  const text = await r.text();
+  const rows = parseCSV(text);
+  renderTable(rows);
+}
+function renderTable(rows){
+  const wrap = $('#csvWrap'); wrap.innerHTML='';
+  const tbl = document.createElement('table');
+  const thead = document.createElement('thead'); const thr=document.createElement('tr');
+  rows[0].forEach(h=>{ const th=document.createElement('th'); th.textContent=h; thr.appendChild(th); });
+  thead.appendChild(thr); tbl.appendChild(thead);
+  const tbody = document.createElement('tbody');
+  for(let i=1;i<rows.length;i++){ const tr=document.createElement('tr');
+    rows[i].forEach((c,j)=>{ const td=document.createElement('td'); td.contentEditable='true'; td.textContent=c; td.dataset.r=i; td.dataset.c=j; tr.appendChild(td); });
+    tbody.appendChild(tr);
+  }
+  tbl.appendChild(tbody); wrap.appendChild(tbl);
+  wrap.dataset.rows = JSON.stringify(rows);
+}
+async function saveCSV(){
+  const p = $('#csvPath').value.trim(); if(!p){ alert('pathを入力'); return; }
+  const wrap = $('#csvWrap'); if(!wrap.dataset.rows){ alert('先に読込'); return; }
+  // Reconstruct rows from DOM
+  const tbl = wrap.querySelector('table'); const rows=[];
+  const headers=[...tbl.querySelectorAll('thead th')].map(th=>th.textContent||''); rows.push(headers);
+  tbl.querySelectorAll('tbody tr').forEach(tr=>{
+    const r=[]; tr.querySelectorAll('td').forEach(td=> r.push(td.textContent||'')); rows.push(r);
   });
+  const csv = toCSV(rows);
+  const r = await fetch(api()+"/api/save_csv",{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({path:p, csv})});
+  const j = await r.json(); if(j.ok){ alert('保存OK: '+j.path); } else { alert('保存失敗'); }
+}
 
-  // Stage area controls
-  document.getElementById('fileInput').addEventListener('change', async (e)=>{
-    const f = e.target.files?.[0]; if (!f) return;
-    const text = await f.text();
-    onFileLoaded(state.currentStage, text);
-  });
-
-  document.getElementById('downloadCsv').addEventListener('click', ()=>{
-    const ds = getDataset(state.currentStage);
-    if (!ds) { showToast('CSV未読込'); return; }
-    const csv = csvFromDataset(ds);
-    const fname = state.currentStage.replace('.csv','') + '.edited.csv';
-    download(fname, csv, 'text/csv');
-    showToast('CSVダウンロード');
-  });
-
-  document.getElementById('downloadPatch').addEventListener('click', ()=>{
-    const patch = buildPatch(state.currentStage);
-    const fname = state.currentStage.replace('.csv','') + '.patch.json';
-    download(fname, JSON.stringify(patch, null, 2), 'application/json');
-    showToast('差分パッチ作成');
-  });
-
-  document.getElementById('recalc').addEventListener('click', ()=> postRecalculate(state.currentStage));
-
-  // Init
-  buildTabs();
-  renderTable(state.currentStage);
-  </script>
-</body>
-</html>
+async function loadMermaid(){
+  const p = $('#mmdPath').value.trim(); if(!p){ alert('pathを入力'); return; }
+  const r = await fetch(api()+"/api/read_text?path="+encodeURIComponent(p));
+  if(!r.ok){ alert('読み込み失敗'); return; }
+  const text = await r.text();
+  // Extract ```mermaid ... ``` if present
+  const m = text.match(/```mermaid([\s\S]*?)```/);
+  const code = m ? m[1].trim() : text;
+  const el = document.createElement('div'); el.className='mermaid'; el.textContent = code;
+  const wrap = $('#mmd'); wrap.innerHTML=''; wrap.appendChild(el);
+  mermaid.run({ nodes: [el] });
+}
+</script>
