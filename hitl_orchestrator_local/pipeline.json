@@ -1,0 +1,29 @@
+{
+  "steps": [
+    {
+      "name": "01_convert",
+      "cmd": "mkdir -p {out_dir}/{run_id} && python convert_motor_list.py --pdf {pdf} --out {out_dir}/{run_id}/fe_list.csv",
+      "outputs": ["{out_dir}/{run_id}/fe_list.csv"]
+    },
+    {
+      "name": "02_header_map",
+      "cmd": "mkdir -p {out_dir}/{run_id} && python llm_header_map.py {out_dir}/{run_id}/fe_list.csv {out_dir}/{run_id}/fe_list_norm.csv",
+      "outputs": ["{out_dir}/{run_id}/fe_list_norm.csv"]
+    },
+    {
+      "name": "03_fix_rows",
+      "cmd": "mkdir -p {out_dir}/{run_id} && python llm_fix_rows.py {out_dir}/{run_id}/fe_list_norm.csv {out_dir}/{run_id}/fe_list_fixed.csv",
+      "outputs": ["{out_dir}/{run_id}/fe_list_fixed.csv"]
+    },
+    {
+      "name": "04_heavy",
+      "cmd": "mkdir -p {out_dir}/{run_id} && python heavy_from_llm.py {out_dir}/{run_id}/fe_list_fixed.csv {out_dir}/{run_id}/fe_list_heavy.csv",
+      "outputs": ["{out_dir}/{run_id}/fe_list_heavy.csv"]
+    },
+    {
+      "name": "05_size",
+      "cmd": "mkdir -p {out_dir}/B_full && python size_from_fe_auto.py --in {out_dir}/{run_id}/fe_list_heavy.csv --out {out_dir}/B_full",
+      "outputs": ["{out_dir}/B_full/drive_list.csv","{out_dir}/B_full/xfmr_list.csv","{out_dir}/B_full/wiring.md"]
+    }
+  ]
+}

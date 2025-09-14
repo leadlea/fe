@@ -30,3 +30,43 @@ certs/              # 自己署名証明書ディレクトリ
 # もしweb/を使わない（Pages側にhitl.htmlのみ）の場合は以下で丸ごと無視
 # web/
 
+# --- Orchestrator local artifacts (追跡不要) ---
+hitl_orchestrator_local/.venv/
+hitl_orchestrator_local/certs/
+hitl_orchestrator_local/runs/
+hitl_orchestrator_local/out/
+
+# 退避用
+archive/
+
+# Logs / temp
+*.log
+*.tmp
+*.bak
+
+# (任意) CIでのみ配信するなら、ローカル生成の docs/out は無視
+# docs/out/
+
+# (方針を決めて) PDFはどちらか一方：
+# 1) そもそもコミットしない場合
+# *.pdf
+# 2) 履歴は持ちたい場合は Git LFS 推奨（下の手順参照）
+
+
+# --- Orchestrator local artifacts ---
+hitl_orchestrator_local/.venv/
+hitl_orchestrator_local/certs/
+hitl_orchestrator_local/runs/
+hitl_orchestrator_local/out/
+
+# Root-level certs (確実に無視)
+#/certs/ を使うなら先頭スラを付けると安全
+/certs/
+*.crt
+*.csr
+
+# PDFはコミットしない方針なら有効化
+*.pdf
+
+# ルートの web/ を使わないなら無視
+web/
