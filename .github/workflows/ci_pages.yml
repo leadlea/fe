@@ -20,7 +20,7 @@ permissions:
   id-token: write
 
 env:
-  TR_TOLERANCE: "0.01"  # 許容相対誤差 1%
+  TR_TOLERANCE: "0.01"  # 1%
 
 jobs:
   tr-consistency:
@@ -29,20 +29,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Python と pandas を用意
+      # Python + pandas を用意
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - name: Install pandas
         run: pip install --disable-pip-version-check pandas
 
-      # 必須ファイルの存在確認
       - name: Check files exist
         run: |
           test -f out/B_full/drive_list.csv || (echo "::error file=out/B_full/drive_list.csv::missing" && exit 1)
           test -f out/B_full/xfmr_list.csv  || (echo "::error file=out/B_full/xfmr_list.csv::missing" && exit 1)
 
-      # TR整合チェック（pandas使用）
       - name: Validate transformer consistency
         run: |
           python - <<'PY'
@@ -74,7 +72,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # out -> docs/out へコピー（ダッシュボード用に相対パスも補正）
       - name: Prepare docs (copy out → docs/out)
         run: |
           mkdir -p docs/out
@@ -83,19 +80,32 @@ jobs:
             sed -i 's|\.\./out/|out/|g' docs/executive_summary.html
           fi
 
-      # wiring.md がある場合のみ Mermaid を SVG に変換
+      # wiring.md があるときだけ Mermaid → SVG（サンドボックス無効化付き）
       - name: Setup Node for Mermaid
         if: ${{ hashFiles('docs/out/B_full/wiring.md') != '' }}
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Render Mermaid to SVG
+      - name: Install mermaid-cli
+        if: ${{ hashFiles('docs/out/B_full/wiring.md') != '' }}
+        run: npm i -g @mermaid-js/mermaid-cli
+
+      - name: Write puppeteer config (no-sandbox)
         if: ${{ hashFiles('docs/out/B_full/wiring.md') != '' }}
         run: |
-          npm i -g @mermaid-js/mermaid-cli
+          cat > puppeteer-config.json <<'JSON'
+          {
+            "args": ["--no-sandbox", "--disable-setuid-sandbox"]
+          }
+          JSON
+
+      - name: Render Mermaid to SVG
+        if: ${{ hashFiles('docs/out/B_full/wiring.md') != '' }}
+        continue-on-error: true
+        run: |
           sed -n '/```mermaid/,/```/p' docs/out/B_full/wiring.md | sed '1d;$d' > docs/out/B_full/wiring.mmd
-          mmdc -i docs/out/B_full/wiring.mmd -o docs/out/B_full/wiring.svg
+          mmdc -p puppeteer-config.json -i docs/out/B_full/wiring.mmd -o docs/out/B_full/wiring.svg
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
