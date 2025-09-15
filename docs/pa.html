@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>富士電機向けプレゼン資料 — AI×HITLでプロセス自動化を前進</title>
+
+<!-- ====== 白背景／黒文字／大きめUI ====== -->
+<style>
+  :root{
+    --bg:#ffffff; --ink:#111111; --ink-dim:#444; --line:#e5e7eb; --muted:#f4f6f8;
+    --accent:#111; --ok:#0f766e; --warn:#b45309; --bad:#b91c1c;
+    --radius:16px;
+  }
+  *{ box-sizing:border-box }
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", sans-serif;
+    margin:0; padding:32px; line-height:1.6; font-size:20px;
+  }
+  header{ max-width:1280px; margin:0 auto 24px auto }
+  h1{ font-size:42px; line-height:1.15; margin:0 0 8px }
+  .lead{ color:var(--ink-dim); margin:0 0 12px; font-size:22px }
+  .meta{ font-size:16px; color:#666 }
+
+  .linkbar{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px }
+  .btn{
+    display:inline-block; text-decoration:none; color:var(--ink);
+    border:1px solid var(--line); background:#fff; padding:8px 12px; border-radius:8px;
+    font-size:16px; font-weight:700;
+  }
+
+  .grid{ max-width:1280px; margin:0 auto; display:grid; grid-template-columns: repeat(12, 1fr); gap:16px }
+  .card{
+    grid-column: span 12; background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px 22px; box-shadow: 0 8px 30px rgba(0,0,0,.05);
+  }
+  .span-6{ grid-column: span 6 }
+  .span-4{ grid-column: span 4 }
+  .span-8{ grid-column: span 8 }
+  @media (max-width: 1024px){ .span-6,.span-4,.span-8{ grid-column: span 12 } }
+
+  h2{ font-size:28px; margin:0 0 12px 0; line-height:1.25 }
+  h3{ font-size:22px; margin:16px 0 8px }
+  .badge{ display:inline-block; padding:4px 10px; font-size:14px; border:1px solid var(--line); border-radius:999px; background:var(--muted) }
+  .note{ color:#666; font-size:16px }
+  table{ width:100%; border-collapse: collapse; font-size:18px; margin-top:6px }
+  th,td{ padding:10px 12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top }
+  th{ color:#555; font-weight:700 }
+  code,.code{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:#fafafa; border:1px solid var(--line); padding:2px 6px; border-radius:6px }
+  .mermaid{ border:1px solid var(--line); border-radius:12px; padding:10px; background:#fff; }
+  .cols{ display:grid; grid-template-columns:1fr 1fr; gap:12px }
+  @media (max-width: 900px){ .cols{ grid-template-columns:1fr } }
+  .callout{ border-left:6px solid var(--accent); background:#fafafa; padding:12px 14px; border-radius:8px }
+  .footer{ max-width:1280px; margin:24px auto 0; color:#666; font-size:14px; text-align:right }
+
+  /* 図面タブ切替 */
+  .tabs{ display:flex; gap:8px; margin:8px 0 12px }
+  .tabbtn{ border:1px solid var(--line); background:#fff; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:16px }
+  .tabbtn[aria-selected="true"]{ outline:2px solid #111; font-weight:700 }
+  .hide{ display:none }
+
+  /* 動画埋め込み（レスポンシブ） */
+  .video{
+    position:relative; width:100%; padding-top:56.25%;
+    background:#000; border:1px solid var(--line); border-radius:12px; overflow:hidden;
+  }
+  .video iframe{
+    position:absolute; inset:0; width:100%; height:100%; border:0;
+  }
+
+  @media print{
+    body{ padding:0; font-size:16px }
+    .card{ page-break-inside: avoid }
+  }
+</style>
+
+<!-- ====== Mermaid（ライト） ====== -->
+<script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+<script> mermaid.initialize({ startOnLoad:true, theme:'default', securityLevel:'loose' }); </script>
+</head>
+<body>
+
+<header>
+  <h1>AI×HITLで「現場の生産性」を底上げする</h1>
+  <p class="lead"><b>AI推進プロジェクト部と連携しながら、</b>プロセスオートメーション部の実務課題を“確実に”前進。<b>唯一無二の生成AIの使い方</b>＋<b>ヒューマン・イン・ザ・ループ</b>で、完全人手の工程を効率化し、品質を担保します。</p>
+  <p class="meta">作成者：ビジョンコンサルティング　福原玄</p>
+
+  <!-- 追加：外部リンク（GitHub／YouTube） -->
+  <div class="linkbar">
+    <a class="btn" href="https://github.com/leadlea/fe" target="_blank" rel="noopener">GitHubリポジトリ</a>
+    <a class="btn" href="https://youtu.be/CZWzqSq6Gcg" target="_blank" rel="noopener">YouTubeデモ</a>
+  </div>
+</header>
+
+<main class="grid">
+
+  <!-- 目的／コアメッセージ -->
+  <section class="card span-8">
+    <h2>目的（本提案が解くこと）</h2>
+    <ul>
+      <li>AI推進プロジェクト部のリーダーシップを体現し、全社展開の「旗印」を作る。</li>
+      <li>プロセスオートメーション部の困りごと（PDF起点の手作業・属人化）をAIテクノロジーで解決。</li>
+    </ul>
+    <h3>コアメッセージ</h3>
+    <ul>
+      <li><b>唯一無二の生成AIの使い方</b>で「表記揺れ・欠損・レイアウト差」を吸収し、現行ルールを強化。</li>
+      <li><b>ヒューマン・イン・ザ・ループ（HITL）</b>により、いつでもCSVで補正・再計算できる“安全装置”。</li>
+    </ul>
+  </section>
+
+  <!-- 成果の要点 -->
+  <section class="card span-4">
+    <h2>技術検証の大まかな結果</h2>
+    <ul>
+      <li>7つのPDFのうち<b>1</b>をベースにルール化し、フォーマットの異なる<b>5</b>と<b>7</b>で好成績を確認。</li>
+      <li>LLM活用で「揺れ補正」「欠損補完」を実現。</li>
+      <li>各ステップでCSV出力。どのタイミングでも人手補正→再実行が可能。</li>
+    </ul>
+  </section>
+
+  <!-- 全体像（パイプライン） -->
+  <section class="card span-12">
+    <h2>全体像：非破壊で既存フローを強化する「LLMチップ」</h2>
+    <div class="mermaid">
+    flowchart LR
+      A[PDF<br/>電動機リスト] --> B[OCR/抽出<br/>fe_list.csv]
+      B --> C[LLM 見出し正規化]
+      C --> D[LLM 行フィクス]
+      D --> E[LLM 重負荷判定]
+      E --> F[容量算出/丸め<br/>size_from_fe_*]
+      F --> G[SKU候補 Top3]
+      F --> H[単線結線図<br/>Mermaid/SVG]
+      B --> I[アノマリ検出/QC要約]
+      subgraph HITL[HITL: 人手レビュー/編集]
+        X1[CSVエディタで補正] --> X2[保存/差分管理] --> X3[再実行]
+      end
+      C --- HITL; D --- HITL; E --- HITL; F --- HITL
+      class A,B,C,D,E,F,G,H,I node;
+    </div>
+    <p class="note">既存スクリプト群は変更せず“挿し込む”方針。失敗してもいつでもCSVへ戻れるため運用リスクが低いのが特長。</p>
+  </section>
+
+  <!-- ★追加：デモ動画（YouTube埋め込み） -->
+  <section class="card span-12">
+    <h2>デモ動画</h2>
+    <div class="video" role="region" aria-label="PDFから結線図までの自動化デモ動画">
+      <iframe
+        src="https://www.youtube.com/embed/CZWzqSq6Gcg"
+        title="生成AI×HITL デモ動画"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <p class="note">リンクで開く：<a href="https://youtu.be/CZWzqSq6Gcg" target="_blank" rel="noopener">https://youtu.be/CZWzqSq6Gcg</a></p>
+  </section>
+
+  <!-- HITLの要諦 -->
+  <section class="card span-6">
+    <h2>HITL（Human-in-the-Loop）の要諦</h2>
+    <div class="cols">
+      <div class="callout">
+        <b>いつでも介入できる設計</b><br/>
+        各ステップがCSVを吐き出すため、工程途中での補正・注釈・除外が容易。<br/>
+        履歴・根拠を残しながら再実行できます。
+      </div>
+      <div class="callout">
+        <b>説明可能性（Explainability）</b><br/>
+        「どの値を・どう丸めたか」「重負荷判定の根拠文」などを出力し、承認プロセスで強い。
+      </div>
+    </div>
+    <ul>
+      <li>差分CSV（Before→After）でレビューを効率化</li>
+      <li>型番（SKU）への着地を短縮し、購買部門との会話が速い</li>
+    </ul>
+  </section>
+
+  <!-- LLMの使いどころ -->
+  <section class="card span-6">
+    <h2>LLMの使いどころと効果（勘所）</h2>
+    <table>
+      <thead><tr><th style="width:22%">チップ</th><th>入力</th><th>出力／制約</th><th>期待効果</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>見出しマッピング</b> <span class="badge">header_map</span></td>
+          <td>列名の揺れ（容量/出力/kW、r/m→rpm 等）</td>
+          <td>正規化マップ＋整形CSV</td>
+          <td>レイアウト差分に強く、ルール保守コスト↓</td>
+        </tr>
+        <tr>
+          <td><b>行フィクサー</b> <span class="badge">fix_rows</span></td>
+          <td>数値崩れ・単位ミス・用途テキスト崩れ</td>
+          <td>厳格スキーマで補正</td>
+          <td>kW／rpm／用途の充足率↑、手修正時間↓</td>
+        </tr>
+        <tr>
+          <td><b>重負荷判定</b> <span class="badge">heavy</span></td>
+          <td>用途テキスト＋数値（rpm/トルク等）</td>
+          <td>「重負荷／標準」＋根拠文</td>
+          <td>自動マージン切替の納得感↑</td>
+        </tr>
+        <tr>
+          <td><b>SKUランク</b> <span class="badge">sku_map</span></td>
+          <td>丸めたkW・電圧・周波数</td>
+          <td>実在SKUのTop3＋why</td>
+          <td>机上→型番へ最短導線</td>
+        </tr>
+        <tr>
+          <td><b>QC要約</b> <span class="badge">anomaly</span></td>
+          <td>IF/LOF等の異常検出結果</td>
+          <td>日本語で“どこが変か”を要約</td>
+          <td>見逃し防止、レビュー時間↓</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Before→After の見本（テキスト例） -->
+  <section class="card span-6">
+    <h2>Before → After（例）</h2>
+    <table>
+      <thead><tr><th>項目</th><th>Before → After</th></tr></thead>
+      <tbody>
+        <tr><td>出力</td><td>“45” → <b>45 kW</b>（単位補完）</td></tr>
+        <tr><td>回転数</td><td>“r/m 1450” → <b>rpm 1450</b>（表記揺れ吸収）</td></tr>
+        <tr><td>用途</td><td>“スタンド” → <b>スタンド（重負荷）</b>（根拠文付）</td></tr>
+      </tbody>
+    </table>
+    <p class="note">実デモでは差分CSVから自動描画可能。</p>
+  </section>
+
+  <!-- 最終成果物 図面（Mermaid/SVG表示） -->
+  <section class="card span-12">
+    <h2>最終成果物：図面（Mermaid / SVG 表示）</h2>
+
+    <div class="tabs" role="tablist" aria-label="図面表示の切替">
+      <button id="tab-mermaid" class="tabbtn" role="tab" aria-selected="true" aria-controls="panel-mermaid">Mermaid版</button>
+      <button id="tab-svg" class="tabbtn" role="tab" aria-selected="false" aria-controls="panel-svg">SVG版</button>
+    </div>
+
+    <!-- Mermaid最終版（ここにwiring.mdのコードブロックを貼り付け） -->
+    <div id="panel-mermaid" role="tabpanel" aria-labelledby="tab-mermaid">
+      <div class="mermaid" id="final-mermaid">
+      %% ここを out/B_full/wiring.md のMermaid記法に差し替え
+      flowchart LR
+        TX[Transformer 500 kVA]:::tx --> INV1[VFD 55 kW]:::inv
+        INV1 --> M1[スタンド 45 kW]:::m
+        classDef tx fill:#ffffff,stroke:#111,stroke-width:1px;
+        classDef inv fill:#ffffff,stroke:#111,stroke-width:1px;
+        classDef m  fill:#ffffff,stroke:#111,stroke-width:1px;
+      </div>
+      <p class="note">※ 実運用ではCIで <code>wiring.md → wiring.svg</code> を生成し、下記SVG版と二系統で配布可能。</p>
+    </div>
+
+    <!-- SVG最終版（ビルド済みwiring.svgを直貼り or 外部参照） -->
+    <div id="panel-svg" class="hide" role="tabpanel" aria-labelledby="tab-svg">
+      <!-- 1) 外部ファイル参照する場合（配置例：docs/wiring.svg） -->
+      <!-- <img src="./wiring.svg" alt="最終図面（SVG）" style="width:100%; height:auto; border:1px solid var(--line); border-radius:12px;"> -->
+
+      <!-- 2) 直貼りSVG（例） -->
+      <div style="border:1px solid var(--line); border-radius:12px; overflow:hidden">
+        <svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" aria-label="最終図面（SVGサンプル）">
+          <style>
+            .box{ fill:#fff; stroke:#111; stroke-width:2 }
+            .arrow{ stroke:#111; stroke-width:2; marker-end:url(#arr) }
+            .label{ font:16px sans-serif; fill:#111 }
+          </style>
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#111"/>
+            </marker>
+          </defs>
+          <!-- Boxes -->
+          <rect class="box" x="40"  y="80" width="220" height="80" rx="10"/>
+          <text class="label" x="150" y="126" text-anchor="middle">Transformer 500 kVA</text>
+
+          <rect class="box" x="340" y="80" width="180" height="80" rx="10"/>
+          <text class="label" x="430" y="126" text-anchor="middle">VFD 55 kW</text>
+
+          <rect class="box" x="660" y="80" width="180" height="80" rx="10"/>
+          <text class="label" x="750" y="126" text-anchor="middle">スタンド 45 kW</text>
+
+          <!-- Arrows -->
+          <line class="arrow" x1="260" y1="120" x2="340" y2="120"/>
+          <line class="arrow" x1="520" y1="120" x2="660" y2="120"/>
+        </svg>
+      </div>
+      <p class="note">※ 実ファイル <code>wiring.svg</code> をビルド成果物として配置すれば、上の直貼り部分を差し替えるだけで完成版になります。</p>
+    </div>
+  </section>
+
+  <!-- 運用／ガバナンス -->
+  <section class="card span-12">
+    <h2>運用／ガバナンス（承認・監査・巻き戻し）</h2>
+    <div class="mermaid">
+    flowchart LR
+      S1[入力PDF/メール格納] --> S2[抽出/正規化CSV]
+      S2 --> S3[レビュー/補正<br/>HITL]
+      S3 --> S4[再計算/再生成]
+      S4 --> S5[成果物: SKU候補/結線図/根拠文]
+      S3 --> L1[ログ/差分CSV/根拠]
+      S5 --> A1[承認フロー]
+      L1 --> A1
+      A1 --> AR[監査対応/再現性]
+    </div>
+    <ul>
+      <li>各工程でCSV・ログを保存（巻き戻し可能）。</li>
+      <li>根拠文・差分・ログを添付して承認プロセスを短縮。</li>
+    </ul>
+  </section>
+
+  <!-- ロードマップ -->
+  <section class="card span-12">
+    <h2>ロードマップ（小さく始めて、確実に伸ばす）</h2>
+    <div class="mermaid">
+    gantt
+      title 展開ステップ
+      dateFormat  YYYY-MM-DD
+      section PoC/MVP
+      PoC完成/要件固め        :done,    p1, 2025-09-01, 2025-09-10
+      section 小規模運用
+      1〜2現場で並走展開      :active,  p2, 2025-09-11, 2025-10-10
+      section 拡張
+      SKU連携/承認電子化      :         p3, 2025-10-11, 2025-11-15
+      全社展開ガイド整備      :         p4, 2025-11-16, 2025-12-15
+    </div>
+    <p class="note">日付は雛形。社内スケジュールに合わせて調整可能。</p>
+  </section>
+
+  <!-- 付録：実装メモ（短縮版） -->
+  <section class="card span-12">
+    <h2>付録：実装メモ（短縮版）</h2>
+    <div class="cols">
+      <div>
+        <h3>非破壊アーキテクチャ</h3>
+        <ul>
+          <li>既存スクリプトはそのまま利用、<b>挿入型</b>でLLMチップを追加。</li>
+          <li>出力はすべてCSV化、HITLでの補正→再実行を前提。</li>
+        </ul>
+        <h3>セキュリティ／運用</h3>
+        <ul>
+          <li>資格情報は環境変数またはプロファイル注入。リポジトリへは<b>絶対に含めない</b>。</li>
+          <li>自己署名証明書の扱い、CORS許可ドメインの最小化。</li>
+        </ul>
+      </div>
+      <div>
+        <h3>データ品質の要所</h3>
+        <ul>
+          <li>表記揺れ辞書／正規化ルールの継続学習。</li>
+          <li>異常値検出→要約→レビューで“止める設計”。</li>
+          <li>丸めとマージンの根拠文を保存（承認で有利）。</li>
+        </ul>
+        <h3>拡張の見取り図</h3>
+        <ul>
+          <li>SKUマスタ連携、電子承認、ダッシュボード自動集計。</li>
+          <li>現場別テンプレート／テンプレ学習でカバレッジ拡張。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<p class="footer">© ビジョンコンサルティング 福原玄</p>
+
+<script>
+  // 図面タブ切替
+  const tabM = document.getElementById('tab-mermaid');
+  const tabS = document.getElementById('tab-svg');
+  const panelM = document.getElementById('panel-mermaid');
+  const panelS = document.getElementById('panel-svg');
+  function sel(which){
+    const isM = which==='m';
+    panelM.classList.toggle('hide', !isM);
+    panelS.classList.toggle('hide',  isM);
+    tabM.setAttribute('aria-selected', String(isM));
+    tabS.setAttribute('aria-selected', String(!isM));
+  }
+  tabM.addEventListener('click', ()=>sel('m'));
+  tabS.addEventListener('click', ()=>sel('s'));
+</script>
+
+</body>
+</html>
