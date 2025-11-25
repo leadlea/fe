@@ -149,4 +149,71 @@ git push
 
 ---
 
-© ビジョンコンサルティング 福原玄 PoC / MVP（HITL Orchestrator）。
+## 本リポジトリの位置づけ / About This Repository
+
+本リポジトリは、合同会社Lead lea（以下「Lead lea」）が開発した  
+PoC／MVP 用プロダクトのソースコードを管理するものです。
+
+本リポジトリは、{{CLIENT_NAME}}（以下「クライアント」）における  
+**社内検証・PoC・社内デモ用途**での利用を目的として提供しているものであり、  
+いかなる企業の正式な受託開発成果物として提供されるものではありません。
+
+This repository stores the source code of a proof-of-concept (PoC) / MVP product  
+developed by Lead lea LLC (“Lead lea”).
+
+It is provided solely for **internal evaluation, PoC, and internal demo use**  
+within {{CLIENT_NAME}} (the “Client”),  
+and is **not** delivered as an official outsourcing deliverable of any company.
+
+---
+
+## 知的財産権 / Intellectual Property
+
+本リポジトリに含まれるソースコード、ドキュメントその他一切の成果物の  
+著作権および知的財産権は、特段の合意がない限り、すべて Lead lea に帰属します。
+
+Unless otherwise agreed in writing, all copyrights and intellectual property rights  
+in and to the source code, documents, and any other materials contained in this repository  
+shall remain the exclusive property of Lead lea.
+
+---
+
+## 利用条件 / Terms of Use
+
+- 利用可能範囲：  
+  - {{CLIENT_NAME}} の社内における利用（PoC、技術検証、社内デモ等）に限ります。  
+
+- 提供形態：  
+  - 本リポジトリは **AS IS（現状有姿）** で提供されるものであり、  
+    動作保証・性能保証・恒常的な保守義務を Lead lea は負いません。  
+
+- 禁止事項：  
+  - 第三者への再配布、商用サービスへの直接組み込み等を行う場合は、  
+    事前に Lead lea との協議・書面による合意が必要です。
+
+- Permitted scope of use:  
+  - Internal use within {{CLIENT_NAME}} (PoC, technical evaluation, internal demos, etc.) only.  
+
+- Mode of provision:  
+  - This repository is provided **“AS IS”**, and Lead lea does not assume any obligation  
+    for warranties, performance guarantees, or ongoing maintenance.  
+
+- Restrictions:  
+  - Redistribution to third parties and direct incorporation into commercial services  
+    require prior consultation with, and written approval from, Lead lea.
+
+---
+
+## 本番導入・商用利用について / Production & Commercial Use
+
+本リポジトリに含まれる機能を本番システムとして商用利用する場合、  
+または大規模な機能追加・カスタマイズを行う場合は、  
+別途 Lead lea との間で正式な契約を締結したうえで進めることを前提とします。
+
+If the Client wishes to use any functions contained in this repository  
+for production or commercial purposes, or to implement major enhancements  
+or customizations, such activities shall be carried out only after  
+entering into a separate formal agreement with Lead lea.
+
+
+
